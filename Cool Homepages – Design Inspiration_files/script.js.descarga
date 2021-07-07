@@ -1,0 +1,91 @@
+jQuery(document).ready(function () {
+    itemHeight();
+
+    jQuery("[data-fancybox]").fancybox({
+        loop: true,
+        titlePosition: 'inside',
+        transitionIn: 'elastic',
+        transitionOut: 'elastic',
+        easingIn: 'easeOutBack',
+        easingOut: 'easeInBack',
+        thumbs: {
+            autoStart: true
+        },
+        buttons: [
+            'zoom',
+            'close'
+        ]
+    });
+
+    jQuery( ".layout-cover.slider_layout" ).each(function( index ) {
+        var post_id = jQuery(this).data('post_slider_id');
+        jQuery('.layout-cover.slider_layout.'+post_id).owlCarousel({
+            items: jQuery('.layout-cover.slider_layout.'+post_id).data('clm_desktop'),
+            itemsDesktop: [980, jQuery('.layout-cover.slider_layout.'+post_id).data('clm_small_desktop')],
+            itemsDesktopSmall: [720, jQuery('.layout-cover.slider_layout.'+post_id).data('clm_tablet')],
+            itemsMobile: [600, jQuery('.layout-cover.slider_layout.'+post_id).data('clm_mobile')],
+            pagination: true,
+            autoPlay: true,
+            navigation: true,
+            navigationText: [
+                "<span></span>",
+                "<span></span>"
+            ],
+        });
+    });
+    
+});
+
+jQuery(window).resize(function () {
+    itemHeight();
+    gsAnimateElement();
+    gsMasonry();
+});
+
+jQuery(window).load(function () {
+    gsMasonry();
+    gsAnimateElement();
+});
+
+jQuery(window).scroll(function () {
+    gsAnimateElement();
+});
+
+function gsMasonry() {
+    jQuery('.masonry_layout').imagesLoaded(function () {
+        jQuery('.masonry_layout').masonry({
+            itemSelector: '.gs-content',
+            isResizable: true,
+            columnWidth: 0,
+            isAnimated: true
+        });
+    });
+}
+
+var windowHeight = jQuery(window).height();
+function gsAnimateElement() {
+    var windowTop;
+    windowTop = jQuery(window).scrollTop(); // calculate distance from top of window
+    // loop through each item to check when it animates
+    jQuery('.gs_animate').each(function () {
+        var gsElement = jQuery(this);
+        if (gsElement.hasClass('animated')) {
+            return true;
+        } // if already animated skip to the next item
+        var gsTopOffse = gsElement.offset().top; // element's distance from top of page in pixels
+        if (windowTop > (gsTopOffse - (windowHeight * .99))) {
+            // animate when top of the window is 3/4 above the element
+            gsElement.addClass('animated');
+            effect = gsElement.attr('data-effect');
+            gsElement.addClass(effect);
+        }
+    });
+}
+
+function itemHeight() {
+    jQuery('.inspirational.layla figure').each(function () {
+        var $itemHeight = jQuery(this).height();
+        $itemHeight = $itemHeight - 30;
+        jQuery(this).css('height', $itemHeight + 'px');
+    });
+}
